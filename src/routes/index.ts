@@ -1,11 +1,15 @@
 import * as express from "express";
-import ThreadControllers from "../controllers/ThreadControllers";
+import threadRouter from "./threadsRoutes";
+import replieRouter from "./replieRoutes";
+import userRouter from "./userRoutes";
+import likeRouter from "./likeRoutes";
+import followRouter from "./followRoutes";
 const router = express.Router();
 
-router.get("/threads", ThreadControllers.find);
-router.get("/thread/:id", ThreadControllers.findOne);
-router.post("/thread", ThreadControllers.create);
-router.patch("/thread/:id", ThreadControllers.update);
-router.delete("/thread/:id", ThreadControllers.delete);
+router.use("/", threadRouter);
+router.use("/", replieRouter);
+router.use("/", userRouter);
+router.use("/", likeRouter);
+router.use("/", followRouter);
 
 export default router;

@@ -1,20 +1,18 @@
 import { Repository } from "typeorm";
-import { Thread } from "../entities/thread";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
-import { createThreadSchema, updateThreadSchema } from "../utils/Thread";
+import { User } from "../entities/user";
+import { createUserSchema, updateUserSchema } from "../utils/User";
 
-export default new (class ThreadServices {
-	private readonly ThreadRepository: Repository<Thread> =
-		AppDataSource.getRepository(Thread);
+export default new (class UserServices {
+	private readonly UserRepository: Repository<User> =
+		AppDataSource.getRepository(User);
 
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
-			const threads = await this.ThreadRepository.find({
-				relations: ["selecteduser", "selectedthread"],
-			});
+			const users = await this.UserRepository.find();
 
-			return res.status(200).json({ status: "success", data: threads });
+			return res.status(200).json({ status: "success", data: users });
 		} catch (err) {
 			return res
 				.status(500)
@@ -25,14 +23,13 @@ export default new (class ThreadServices {
 	async findOne(req: Request, res: Response): Promise<Response> {
 		try {
 			const id = Number(req.params.id);
-			const threads = await this.ThreadRepository.findOne({
+			const users = await this.UserRepository.findOne({
 				where: { id },
-				relations: ["selecteduser", "selectedthread"],
 			});
 
-			if (!threads) return res.status(404).json({ Error: "ID Not Found" });
+			if (!users) return res.status(404).json({ Error: "ID Not Found" });
 
-			return res.status(200).json(threads);
+			return res.status(200).json(users);
 		} catch (err) {
 			return res.status(500).json({ Error: "Error while getting threads" });
 		}
@@ -42,7 +39,7 @@ export default new (class ThreadServices {
 		try {
 			const data = req.body;
 
-			const { error } = createThreadSchema.validate(data);
+			const { error } = createUserSchema.validate(data);
 			if (error)
 				return res
 					.status(401)
@@ -50,13 +47,16 @@ export default new (class ThreadServices {
 
 			// console.log(data);
 
-			const obj = this.ThreadRepository.create({
-				content: data.content,
-				image: data.image,
-				selecteduser: data.selecteduser,
+			const obj = this.UserRepository.create({
+				username: data.username,
+				full_name: data.full_name,
+				email: data.email,
+				password: data.password,
+				profile_picture: data.profile_picture,
+				profile_description: data.profile_description,
 			});
 
-			const result = await this.ThreadRepository.save(obj);
+			const result = await this.UserRepository.save(obj);
 
 			return res.status(201).json({ Thread: result });
 		} catch (err) {
@@ -69,31 +69,47 @@ export default new (class ThreadServices {
 	async update(req: Request, res: Response): Promise<Response> {
 		try {
 			const id = Number(req.params.id);
-			const thread = await this.ThreadRepository.findOne({
+			const users = await this.UserRepository.findOne({
 				where: { id },
 			});
 
-			if (!thread) {
+			if (!users) {
 				return res.status(404).json({ Error: "Thread not found" });
 			}
 
 			const data = req.body;
 
-			const { error } = updateThreadSchema.validate(data);
+			const { error } = updateUserSchema.validate(data);
 			if (error)
 				return res
 					.status(401)
 					.json({ Error: "Data yang di Input tidak valid" });
 
-			if (data.content) {
-				thread.content = data.content;
+			if (data.username) {
+				users.username = data.username;
 			}
 
-			if (data.image) {
-				thread.image = data.image;
+			if (data.full_name) {
+				users.full_name = data.full_name;
 			}
 
-			const update = await this.ThreadRepository.save(thread);
+			if (data.email) {
+				users.email = data.email;
+			}
+
+			if (data.password) {
+				users.password = data.password;
+			}
+
+			if (data.profile_picture) {
+				users.profile_picture = data.profile_picture;
+			}
+
+			if (data.profile_description) {
+				users.profile_description = data.profile_description;
+			}
+
+			const update = await this.UserRepository.save(users);
 			return res.status(200).json(update);
 		} catch (err) {
 			return res
@@ -105,15 +121,15 @@ export default new (class ThreadServices {
 	async delete(req: Request, res: Response): Promise<Response> {
 		try {
 			const id = Number(req.params.id);
-			const threadDelete = await this.ThreadRepository.findOne({
+			const userDelete = await this.UserRepository.findOne({
 				where: { id },
 			});
-			if (!threadDelete) return res.status(404).json({ Error: "ID Not Found" });
+			if (!userDelete) return res.status(404).json({ Error: "ID Not Found" });
 
-			await this.ThreadRepository.delete({
+			await this.UserRepository.delete({
 				id: id,
 			});
-			return res.status(200).json({ data: threadDelete });
+			return res.status(200).json({ data: userDelete });
 		} catch (err) {
 			return res
 				.status(500)

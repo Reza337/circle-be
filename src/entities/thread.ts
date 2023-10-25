@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	ManyToOne,
+	OneToMany,
+	JoinColumn,
+} from "typeorm";
 import { User } from "./user";
+import { Replie } from "./replies";
+import { Like } from "./like";
 
 @Entity({ name: "threads" })
 export class Thread {
@@ -19,5 +28,20 @@ export class Thread {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
-	usersId: User;
+	@JoinColumn({ name: "userId" })
+	selecteduser: User;
+
+	@OneToMany(() => Replie, (replie) => replie.selectedthread, {
+		onUpdate: "CASCADE",
+		onDelete: "CASCADE",
+	})
+	@JoinColumn()
+	selectedthread: Replie[];
+
+	@OneToMany(() => Like, (like) => like.likeToThread, {
+		onUpdate: "CASCADE",
+		onDelete: "CASCADE",
+	})
+	@JoinColumn()
+	likeToThread: Like[];
 }
