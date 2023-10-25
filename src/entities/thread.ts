@@ -31,12 +31,12 @@ export class Thread {
 	@JoinColumn({ name: "userId" })
 	selecteduser: User;
 
-	@OneToMany(() => Replie, (replie) => replie.selectedthread, {
+	@OneToMany(() => Replie, (replie) => replie.ReplyToThread, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	selectedthread: Replie[];
+	Reply: Replie[];
 
 	@OneToMany(() => Like, (like) => like.likeToThread, {
 		onUpdate: "CASCADE",

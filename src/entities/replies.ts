@@ -29,10 +29,10 @@ export class Replie {
 	@JoinColumn({ name: "user_id" })
 	selecteduser: User;
 
-	@ManyToOne(() => Thread, (thread) => thread.selectedthread, {
+	@ManyToOne(() => Thread, (thread) => thread.Reply, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "thread_id" })
-	selectedthread: Thread;
+	ReplyToThread: Thread;
 }

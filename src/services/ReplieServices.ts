@@ -11,7 +11,7 @@ export default new (class ReplieServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const replies = await this.ReplieRepository.find({
-				relations: ["selecteduser", "selectedthread"], // Menambahkan relasi "selectedthread"
+				relations: ["selecteduser", "ReplyToThread"], // Menambahkan relasi "selectedthread"
 			});
 
 			return res.status(200).json({
@@ -32,7 +32,7 @@ export default new (class ReplieServices {
 			const id = Number(req.params.id);
 			const replies = await this.ReplieRepository.findOne({
 				where: { id },
-				relations: ["selecteduser", "selectedthread"],
+				relations: ["selecteduser", "ReplyToThread"],
 			});
 
 			if (!replies) return res.status(404).json({ Error: "ID Not Found" });
@@ -59,7 +59,7 @@ export default new (class ReplieServices {
 				content: data.content,
 				image: data.image,
 				selecteduser: data.selecteduser,
-				selectedthread: data.selectedthread,
+				ReplyToThread: data.ReplyToThread,
 			});
 
 			const result = await this.ReplieRepository.save(obj);

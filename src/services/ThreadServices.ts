@@ -11,7 +11,7 @@ export default new (class ThreadServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const threads = await this.ThreadRepository.find({
-				relations: ["selecteduser", "selectedthread"],
+				relations: ["selecteduser", "likeToThread", "Reply"],
 			});
 
 			return res.status(200).json({ status: "success", data: threads });
