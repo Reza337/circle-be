@@ -22,7 +22,7 @@ export class Replie {
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	created_at: Date;
 
-	@ManyToOne(() => User, (user) => user.replie, {
+	@ManyToOne(() => User, (user) => user.replies, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})

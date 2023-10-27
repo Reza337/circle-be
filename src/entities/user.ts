@@ -4,6 +4,8 @@ import {
 	Column,
 	OneToMany,
 	JoinColumn,
+	ManyToMany,
+	JoinTable,
 } from "typeorm";
 import { Thread } from "./thread";
 import { Replie } from "./replies";
@@ -13,48 +15,48 @@ import { Follow } from "./following";
 @Entity({ name: "users" })
 export class User {
 	@PrimaryGeneratedColumn()
-	id: number;
+	id!: number;
 
 	@Column()
-	username: string;
+	username!: string;
 
 	@Column()
-	full_name: string;
+	full_name!: string;
 
 	@Column()
-	email: string;
+	email!: string;
 
 	@Column({ select: false })
-	password: string;
+	password!: string;
 
 	@Column({ nullable: true })
-	profile_picture: string;
+	profile_picture!: string;
 
 	@Column({ nullable: true })
-	profile_description: string;
+	profile_description!: string;
 
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-	created_at: Date;
+	created_at!: Date;
 
-	@OneToMany(() => Thread, (thread) => thread.selecteduser, {
+	@OneToMany(() => Thread, (thread) => thread.user, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
-	threads: Thread[];
+	threads!: Thread[];
 
 	@OneToMany(() => Replie, (replie) => replie.selecteduser, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	replie: Replie[];
+	replies!: Replie[];
 
 	@OneToMany(() => Like, (like) => like.likeToUser, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	likeToUser: Like[];
+	likes!: Like[];
 
 	@OneToMany(() => Follow, (follow) => follow.followingToUser, {
 		onUpdate: "CASCADE",
@@ -69,4 +71,18 @@ export class User {
 	})
 	@JoinColumn()
 	followerToUser: Follow[];
+
+	// @ManyToMany(() => User, (user) => user.users)
+	// @JoinTable({
+	// 	name: "following",
+	// 	joinColumn: {
+	// 		name: "following_id",
+	// 		referencedColumnName: "id",
+	// 	},
+	// 	inverseJoinColumn: {
+	// 		name: "follower_id",
+	// 		referencedColumnName: "id",
+	// 	},
+	// })
+	// users!: User[];
 }

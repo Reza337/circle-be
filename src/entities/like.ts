@@ -16,7 +16,7 @@ export class Like {
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	created_at: Date;
 
-	@ManyToOne(() => User, (user) => user.likeToUser, {
+	@ManyToOne(() => User, (user) => user.likes, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})

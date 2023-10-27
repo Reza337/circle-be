@@ -29,7 +29,7 @@ export class Thread {
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "userId" })
-	selecteduser: User;
+	user: User;
 
 	@OneToMany(() => Replie, (replie) => replie.ReplyToThread, {
 		onUpdate: "CASCADE",
