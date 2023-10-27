@@ -3,6 +3,7 @@ import { Thread } from "../entities/thread";
 import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
 import { createThreadSchema, updateThreadSchema } from "../utils/Thread";
+const cloudinary = require("cloudinary").v2;
 
 export default new (class ThreadServices {
 	private readonly ThreadRepository: Repository<Thread> =
@@ -44,6 +45,9 @@ export default new (class ThreadServices {
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
 			const data = req.body;
+			const user = res.locals.loginSession;
+
+			// console.log(user);
 
 			const { error } = createThreadSchema.validate(data);
 			if (error)
@@ -53,15 +57,28 @@ export default new (class ThreadServices {
 
 			// console.log(data);
 
-			const obj = this.ThreadRepository.create({
-				content: data.content,
-				image: data.image,
-				user: data.user,
+			// connecting to claudinary
+			cloudinary.config({
+				cloud_name: "dws0nodlr",
+				api_key: "358419996286175",
+				api_secret: "nxJYyhSNS57_ryQ3phWyqmGw7pY",
 			});
 
-			const result = await this.ThreadRepository.save(obj);
+			//upload data to cloudinary
+			const result = await cloudinary.uploader.upload(req.file.path, {
+				folder: "circle-app",
+			});
 
-			return res.status(201).json({ Thread: result });
+			const obj = this.ThreadRepository.create({
+				content: data.content,
+				image: result.secure_url,
+				// image: data.image,
+				user: user.user.id,
+			});
+
+			const createThread = await this.ThreadRepository.save(obj);
+
+			return res.status(201).json({ Thread: createThread });
 		} catch (err) {
 			return res
 				.status(500)
