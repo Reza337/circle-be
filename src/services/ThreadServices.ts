@@ -31,14 +31,14 @@ export default new (class ThreadServices {
 			const id = Number(req.params.id);
 			const threads = await this.ThreadRepository.findOne({
 				where: { id },
-				relations: ["threads", "selectedthread"],
+				relations: ["user", "likeToThread", "Reply"],
 			});
 
 			if (!threads) return res.status(404).json({ Error: "ID Not Found" });
 
 			return res.status(200).json(threads);
 		} catch (err) {
-			return res.status(500).json({ Error: "Error while getting threads" });
+			return res.status(500).json({ Error: err.message });
 		}
 	}
 
