@@ -89,7 +89,7 @@ export default new (class AuthServices {
 				username: isCheckEmail.username,
 			});
 
-			const token = jwt.sign({ user }, "jwt_secret", {
+			const token = jwt.sign({ user }, process.env.SECRET_KEY, {
 				expiresIn: "1h",
 			});
 

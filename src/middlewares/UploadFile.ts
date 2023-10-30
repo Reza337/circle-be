@@ -1,20 +1,27 @@
+import { NextFunction, Request, Response } from "express";
 import * as multer from "multer";
 
-// Konfigurasi penyimpanan file di sistem file lokal
-const storage: multer.StorageEngine = multer.diskStorage({
-	destination: (req, file, cb) => {
-		// Tentukan folder penyimpanan di sini
-		cb(null, "src/Upload");
-	},
-	filename: (req, file, cb) => {
-		// Tentukan nama file yang diunggah
-		cb(null, file.originalname);
-	},
-});
+export const upload = (fieldName: string) => {
+	const storage = multer.diskStorage({
+		destination: function (req, file, cb) {
+			cb(null, "src/Upload");
+		},
+		filename: function (req, file, cb) {
+			const uniqueSuffix = Date.now();
+			cb(null, file.fieldname + "-" + uniqueSuffix + ".png");
+		},
+	});
 
-// Inisialisasi middleware multer dengan konfigurasi storage
-const upload: multer.Multer = multer({
-	storage: storage,
-});
+	const uploadFile = multer({ storage: storage });
 
-export default upload;
+	return (req: Request, res: Response, next: NextFunction) => {
+		uploadFile.single(fieldName)(req, res, function (error: any) {
+			if (error) {
+				return res.status(400).json({ error });
+			}
+
+			res.locals.filename = req.file.filename;
+			next();
+		});
+	};
+};

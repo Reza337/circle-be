@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-// import UnauthorizedError from "../utils/exception/custom/UnauthorizedError";
-// // import Env from "../utils/variables/Env";
-// import handleError from "../utils/exception/handleError";
 
 export function authenticate(
 	req: Request,
@@ -18,7 +15,7 @@ export function authenticate(
 
 	try {
 		// dotenv.config();
-		const loginSession = jwt.verify(token, "jwt_secret");
+		const loginSession = jwt.verify(token, process.env.SECRET_KEY);
 		res.locals.loginSession = loginSession;
 		next();
 	} catch (error) {
