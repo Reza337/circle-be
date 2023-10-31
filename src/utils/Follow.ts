@@ -1,9 +1,9 @@
 import * as Joi from "joi";
 
 export const followingSchema = Joi.object({
-	followingToUser: Joi.number(),
+	usersFollowing: Joi.number(),
 });
 
 export const followerSchema = Joi.object({
-	followerToUser: Joi.number(),
+	usersFollower: Joi.number(),
 });

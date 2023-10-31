@@ -19,7 +19,6 @@ export const upload = (fieldName: string) => {
 			if (error) {
 				return res.status(400).json({ error });
 			}
-
 			res.locals.filename = req.file.filename;
 			next();
 		});

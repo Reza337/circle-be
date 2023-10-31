@@ -5,7 +5,7 @@ import { createThreadSchema } from "../utils/Thread";
 type QueuePayload = {
 	content: string;
 	image: string;
-	user: number;
+	users: number;
 };
 
 export default new (class ThreadQueue {
@@ -20,13 +20,14 @@ export default new (class ThreadQueue {
 
 			// console.log(data.image);
 
+			if (!data.image) data.image = null;
 			const { error, value } = createThreadSchema.validate(data);
 			if (error) return res.status(400).json({ error });
 
 			const payload: QueuePayload = {
 				content: value.content,
 				image: value.image,
-				user: loginSession.user.id,
+				users: loginSession.users.id,
 			};
 
 			const errorQueue = await MessageQueue.MessageSend(

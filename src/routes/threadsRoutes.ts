@@ -5,7 +5,7 @@ import { upload } from "../middlewares/UploadFile";
 const threadRouter = express.Router();
 
 threadRouter.get("/threads", authenticate, ThreadControllers.find);
-threadRouter.get("/thread/:id", ThreadControllers.findOne);
+threadRouter.get("/thread/:id", authenticate, ThreadControllers.findOne);
 threadRouter.post(
 	"/thread",
 	authenticate,

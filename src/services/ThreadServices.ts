@@ -12,7 +12,7 @@ export default new (class ThreadServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const threads = await this.ThreadRepository.find({
-				relations: ["user", "likeToThread", "Reply"],
+				relations: ["users", "likes", "replies"],
 				order: {
 					id: "DESC",
 				},
@@ -31,12 +31,24 @@ export default new (class ThreadServices {
 			const id = Number(req.params.id);
 			const threads = await this.ThreadRepository.findOne({
 				where: { id },
-				relations: ["user", "likeToThread", "Reply"],
+				relations: ["replies", "replies.users", "users", "likes"],
 			});
 
 			if (!threads) return res.status(404).json({ Error: "ID Not Found" });
 
-			return res.status(200).json(threads);
+			// Memeriksa apakah 'threads' telah ditemukan
+			if (threads) {
+				// Mengakses data 'replies' dari 'threads'
+				const replies = threads.replies;
+
+				// Melakukan sesuatu dengan data 'replies', misalnya, mencetaknya
+				console.log("Replies:", replies);
+
+				// Anda juga dapat melakukan pengolahan data lebih lanjut di sini
+				// Misalnya, Anda bisa mengubah cara responsnya ditampilkan atau menambahkan lebih banyak informasi.
+
+				return res.status(200).json(threads); // Ini hanya contoh, Anda dapat menyesuaikan respons sesuai kebutuhan Anda.
+			}
 		} catch (err) {
 			return res.status(500).json({ Error: err.message });
 		}
@@ -72,8 +84,7 @@ export default new (class ThreadServices {
 			const obj = this.ThreadRepository.create({
 				content: data.content,
 				image: result.secure_url,
-				// image: data.image,
-				user: user.user.id,
+				users: user.users.id,
 			});
 
 			const createThread = await this.ThreadRepository.save(obj);

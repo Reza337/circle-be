@@ -16,9 +16,6 @@ export class Replie {
 	@Column()
 	content: string;
 
-	@Column({ nullable: true })
-	image: string;
-
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	created_at: Date;
 
@@ -27,12 +24,12 @@ export class Replie {
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "user_id" })
-	selecteduser: User;
+	users: User;
 
-	@ManyToOne(() => Thread, (thread) => thread.Reply, {
+	@ManyToOne(() => Thread, (thread) => thread.replies, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "thread_id" })
-	ReplyToThread: Thread;
+	threads: Thread;
 }

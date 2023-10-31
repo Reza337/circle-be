@@ -53,7 +53,7 @@ export default new (class UserServices {
 				email: data.email,
 				password: data.password,
 				profile_picture: data.profile_picture,
-				profile_description: data.profile_description,
+				bio: data.bio,
 			});
 
 			const result = await this.UserRepository.save(obj);
@@ -106,7 +106,7 @@ export default new (class UserServices {
 			}
 
 			if (data.profile_description) {
-				users.profile_description = data.profile_description;
+				users.bio = data.bio;
 			}
 
 			const update = await this.UserRepository.save(users);

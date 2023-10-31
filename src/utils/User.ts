@@ -6,7 +6,7 @@ export const createUserSchema = Joi.object({
 	email: Joi.string().required(),
 	password: Joi.string().required(),
 	profile_picture: Joi.string(),
-	profile_description: Joi.string(),
+	bio: Joi.string(),
 });
 
 export const updateUserSchema = Joi.object({

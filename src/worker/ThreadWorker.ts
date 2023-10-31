@@ -27,8 +27,8 @@ export default new (class ThreadWorker {
 						const thread = this.ThreadRepository.create({
 							content: payload.content,
 							image: cloudinaryResponse,
-							user: {
-								id: payload.user,
+							users: {
+								id: payload.users,
 							},
 						});
 

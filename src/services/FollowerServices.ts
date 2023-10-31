@@ -38,7 +38,7 @@ export default new (class FollowerServices {
 					.json({ Error: "Data yang dimasukan tidak valid" });
 
 			const obj = this.FollowerRepository.create({
-				followerToUser: data.followerToUser,
+				usersFollower: data.usersFollower,
 			});
 
 			const result = await this.FollowerRepository.save(obj);

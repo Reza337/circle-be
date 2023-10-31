@@ -21,12 +21,12 @@ export class Like {
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "user_id" })
-	likeToUser: User;
+	users: User;
 
-	@ManyToOne(() => Thread, (thread) => thread.likeToThread, {
+	@ManyToOne(() => Thread, (thread) => thread.likes, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "thread_id" })
-	likeToThread: Thread;
+	threads: Thread;
 }

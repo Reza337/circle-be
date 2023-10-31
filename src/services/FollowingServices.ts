@@ -38,7 +38,7 @@ export default new (class FollowingServices {
 					.json({ Error: "Data yang dimasukan tidak valid" });
 
 			const obj = this.FollowingRepository.create({
-				followingToUser: data.followingToUser,
+				usersFollowing: data.usersFollowing,
 			});
 
 			const result = await this.FollowingRepository.save(obj);

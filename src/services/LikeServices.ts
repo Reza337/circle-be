@@ -11,7 +11,7 @@ export default new (class LikeServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const likes = await this.LikeRepository.find({
-				relations: ["likeToUser", "likeToThread"],
+				relations: ["users", "threads"],
 			});
 
 			return res.status(200).json({
@@ -38,8 +38,8 @@ export default new (class LikeServices {
 					.json({ Error: "Data yang dimasukan tidak valid" });
 
 			const obj = this.LikeRepository.create({
-				likeToUser: data.likeToUser,
-				likeToThread: data.likeToThread,
+				users: data.users,
+				threads: data.threads,
 			});
 
 			const result = await this.LikeRepository.save(obj);

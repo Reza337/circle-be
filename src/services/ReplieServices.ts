@@ -11,7 +11,18 @@ export default new (class ReplieServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const replies = await this.ReplieRepository.find({
-				relations: ["selecteduser", "ReplyToThread"], // Menambahkan relasi "selectedthread"
+				select: {
+					id: true,
+					content: true,
+					created_at: true,
+					users: {
+						id: true,
+						username: true,
+						full_name: true,
+						profile_picture: true,
+					},
+				},
+				relations: ["threads"],
 			});
 
 			return res.status(200).json({
@@ -32,7 +43,7 @@ export default new (class ReplieServices {
 			const id = Number(req.params.id);
 			const replies = await this.ReplieRepository.findOne({
 				where: { id },
-				relations: ["selecteduser", "ReplyToThread"],
+				relations: ["users", "threads"],
 			});
 
 			if (!replies) return res.status(404).json({ Error: "ID Not Found" });
@@ -48,6 +59,8 @@ export default new (class ReplieServices {
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
 			const data = req.body;
+			const loginSession: any = res.locals.loginSession;
+			// console.log(loginSession);
 
 			const { error } = createReplieSchema.validate(data);
 			if (error)
@@ -57,9 +70,8 @@ export default new (class ReplieServices {
 
 			const obj = this.ReplieRepository.create({
 				content: data.content,
-				image: data.image,
-				selecteduser: data.selecteduser,
-				ReplyToThread: data.ReplyToThread,
+				users: loginSession.user.id,
+				threads: data.threads,
 			});
 
 			const result = await this.ReplieRepository.save(obj);
@@ -87,10 +99,6 @@ export default new (class ReplieServices {
 
 			if (data.content) {
 				replies.content = data.content;
-			}
-
-			if (data.image) {
-				replies.content = data.image;
 			}
 
 			const update = await this.ReplieRepository.save(replies);

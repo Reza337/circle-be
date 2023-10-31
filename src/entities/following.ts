@@ -6,17 +6,17 @@ export class Follow {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@ManyToOne(() => User, (user) => user.followingToUser, {
+	@ManyToOne(() => User, (user) => user.following, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "following_id" })
-	followingToUser: User;
+	usersFollowing: User;
 
-	@ManyToOne(() => User, (user) => user.followerToUser, {
+	@ManyToOne(() => User, (user) => user.follower, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "follower_id" })
-	followerToUser: User;
+	usersFollower: User;
 }

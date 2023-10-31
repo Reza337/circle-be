@@ -33,44 +33,44 @@ export class User {
 	profile_picture!: string;
 
 	@Column({ nullable: true })
-	profile_description!: string;
+	bio!: string;
 
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	created_at!: Date;
 
-	@OneToMany(() => Thread, (thread) => thread.user, {
+	@OneToMany(() => Thread, (thread) => thread.users, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	threads!: Thread[];
 
-	@OneToMany(() => Replie, (replie) => replie.selecteduser, {
+	@OneToMany(() => Replie, (replie) => replie.users, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
 	replies!: Replie[];
 
-	@OneToMany(() => Like, (like) => like.likeToUser, {
+	@OneToMany(() => Like, (like) => like.users, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
 	likes!: Like[];
 
-	@OneToMany(() => Follow, (follow) => follow.followingToUser, {
+	@OneToMany(() => Follow, (follow) => follow.usersFollowing, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	followingToUser: Follow[];
+	following: Follow[];
 
-	@OneToMany(() => Follow, (follow) => follow.followerToUser, {
+	@OneToMany(() => Follow, (follow) => follow.usersFollower, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	followerToUser: Follow[];
+	follower: Follow[];
 
 	// @ManyToMany(() => User, (user) => user.users)
 	// @JoinTable({

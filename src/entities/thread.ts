@@ -28,20 +28,20 @@ export class Thread {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
-	@JoinColumn({ name: "userId" })
-	user: User;
+	@JoinColumn({ name: "usersId" })
+	users: User;
 
-	@OneToMany(() => Replie, (replie) => replie.ReplyToThread, {
+	@OneToMany(() => Replie, (replie) => replie.threads, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	Reply: Replie[];
+	replies: Replie[];
 
-	@OneToMany(() => Like, (like) => like.likeToThread, {
+	@OneToMany(() => Like, (like) => like.threads, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn()
-	likeToThread: Like[];
+	likes: Like[];
 }
