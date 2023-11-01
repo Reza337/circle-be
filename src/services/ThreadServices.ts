@@ -48,7 +48,7 @@ export default new (class ThreadServices {
 				const replies = threads.replies;
 
 				// Melakukan sesuatu dengan data 'replies', misalnya, mencetaknya
-				console.log("Replies:", replies);
+				// console.log("Replies:", replies);
 
 				// Anda juga dapat melakukan pengolahan data lebih lanjut di sini
 				// Misalnya, Anda bisa mengubah cara responsnya ditampilkan atau menambahkan lebih banyak informasi.

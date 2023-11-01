@@ -18,16 +18,16 @@ export default new (class ThreadQueue {
 				image: res.locals.filename || null,
 			};
 
-			console.log(data.image);
+			// console.log(data.image);
 
 			const { error, value } = createThreadSchema.validate(data);
 			if (error) return res.status(400).json({ error });
 
-			if (!value.image) value.image = null;
+			if (!value.image) value.image = null || "";
 			const payload: QueuePayload = {
 				content: value.content,
 				image: value.image,
-				users: loginSession.users.id,
+				users: loginSession.user.id,
 			};
 
 			const errorQueue = await MessageQueue.MessageSend(
@@ -44,6 +44,8 @@ export default new (class ThreadQueue {
 				payload,
 			});
 		} catch (err) {
+			// console.log(err);
+
 			return res.status(500).json({ message: "error in threadqueue method" });
 		}
 	}
