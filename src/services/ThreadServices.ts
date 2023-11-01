@@ -12,7 +12,7 @@ export default new (class ThreadServices {
 	async find(req: Request, res: Response): Promise<Response> {
 		try {
 			const threads = await this.ThreadRepository.find({
-				relations: ["users", "likes", "replies"],
+				relations: ["users", "likes", "likes.users", "replies"],
 				order: {
 					id: "DESC",
 				},
@@ -31,7 +31,13 @@ export default new (class ThreadServices {
 			const id = Number(req.params.id);
 			const threads = await this.ThreadRepository.findOne({
 				where: { id },
-				relations: ["replies", "replies.users", "users", "likes"],
+				relations: [
+					"replies",
+					"replies.users",
+					"users",
+					"likes",
+					"likes.users",
+				],
 			});
 
 			if (!threads) return res.status(404).json({ Error: "ID Not Found" });

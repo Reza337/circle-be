@@ -10,7 +10,7 @@ import {
 import { Thread } from "./thread";
 import { Replie } from "./replies";
 import { Like } from "./like";
-import { Follow } from "./following";
+// import { Follow } from "./following";
 
 @Entity({ name: "users" })
 export class User {
@@ -58,31 +58,31 @@ export class User {
 	@JoinColumn()
 	likes!: Like[];
 
-	@OneToMany(() => Follow, (follow) => follow.usersFollowing, {
-		onUpdate: "CASCADE",
-		onDelete: "CASCADE",
-	})
-	@JoinColumn()
-	following: Follow[];
-
-	@OneToMany(() => Follow, (follow) => follow.usersFollower, {
-		onUpdate: "CASCADE",
-		onDelete: "CASCADE",
-	})
-	@JoinColumn()
-	follower: Follow[];
-
-	// @ManyToMany(() => User, (user) => user.users)
-	// @JoinTable({
-	// 	name: "following",
-	// 	joinColumn: {
-	// 		name: "following_id",
-	// 		referencedColumnName: "id",
-	// 	},
-	// 	inverseJoinColumn: {
-	// 		name: "follower_id",
-	// 		referencedColumnName: "id",
-	// 	},
+	// @OneToMany(() => Follow, (follow) => follow.usersFollowing, {
+	// 	onUpdate: "CASCADE",
+	// 	onDelete: "CASCADE",
 	// })
-	// users!: User[];
+	// @JoinColumn()
+	// following: Follow[];
+
+	// @OneToMany(() => Follow, (follow) => follow.usersFollower, {
+	// 	onUpdate: "CASCADE",
+	// 	onDelete: "CASCADE",
+	// })
+	// @JoinColumn()
+	// follower: Follow[];
+
+	@ManyToMany(() => User, (user) => user.users)
+	@JoinTable({
+		name: "following",
+		joinColumn: {
+			name: "following_id",
+			referencedColumnName: "id",
+		},
+		inverseJoinColumn: {
+			name: "follower_id",
+			referencedColumnName: "id",
+		},
+	})
+	users!: User[];
 }

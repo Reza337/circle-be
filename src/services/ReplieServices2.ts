@@ -11,8 +11,8 @@ export default new (class ReplieServices2 {
 	async find(reqQuery: any): Promise<any> {
 		try {
 			const threadId = parseInt(reqQuery.thread_id as string);
-			console.log(threadId);
-			console.log(typeof threadId);
+			// console.log(threadId);
+			// console.log(typeof threadId);
 
 			const replies = await this.replyRepository.find({
 				relations: ["users"],
@@ -25,7 +25,7 @@ export default new (class ReplieServices2 {
 					id: "DESC",
 				},
 			});
-			console.log(replies);
+			// console.log(replies);
 
 			return replies;
 		} catch (err) {

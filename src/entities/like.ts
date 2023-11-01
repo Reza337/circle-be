@@ -1,9 +1,10 @@
 import {
 	Entity,
 	PrimaryGeneratedColumn,
-	Column,
+	// Column,
 	ManyToOne,
 	JoinColumn,
+	CreateDateColumn,
 } from "typeorm";
 import { User } from "./user";
 import { Thread } from "./thread";
@@ -11,22 +12,22 @@ import { Thread } from "./thread";
 @Entity({ name: "likes" })
 export class Like {
 	@PrimaryGeneratedColumn()
-	id: number;
+	id!: number;
 
-	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-	created_at: Date;
+	@CreateDateColumn({ type: "timestamp with time zone" })
+	created_at!: Date;
 
 	@ManyToOne(() => User, (user) => user.likes, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "user_id" })
-	users: User;
+	users!: User;
 
 	@ManyToOne(() => Thread, (thread) => thread.likes, {
 		onUpdate: "CASCADE",
 		onDelete: "CASCADE",
 	})
 	@JoinColumn({ name: "thread_id" })
-	threads: Thread;
+	threads!: Thread;
 }

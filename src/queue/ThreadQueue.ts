@@ -15,15 +15,15 @@ export default new (class ThreadQueue {
 
 			const data = {
 				content: req.body.content,
-				image: res.locals.filename,
+				image: res.locals.filename || null,
 			};
 
-			// console.log(data.image);
+			console.log(data.image);
 
-			if (!data.image) data.image = null;
 			const { error, value } = createThreadSchema.validate(data);
 			if (error) return res.status(400).json({ error });
 
+			if (!value.image) value.image = null;
 			const payload: QueuePayload = {
 				content: value.content,
 				image: value.image,

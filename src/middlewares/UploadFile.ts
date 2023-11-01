@@ -17,10 +17,18 @@ export const upload = (fieldName: string) => {
 	return (req: Request, res: Response, next: NextFunction) => {
 		uploadFile.single(fieldName)(req, res, function (error: any) {
 			if (error) {
+				if (
+					error instanceof multer.MulterError &&
+					error.code === "LIMIT_UNEXPECTED_FILE"
+				) {
+					return next();
+				}
 				return res.status(400).json({ error });
+			} else {
+				if (req.file) {
+					res.locals.filename = req.file.filename;
+				}
 			}
-			res.locals.filename = req.file.filename;
-			next();
 		});
 	};
 };

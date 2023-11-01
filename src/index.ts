@@ -1,7 +1,7 @@
 import { AppDataSource } from "./data-source";
 import * as express from "express";
 import router from "./routes";
-const cors = require("cors");
+import * as cors from "cors";
 import "dotenv/config";
 
 AppDataSource.initialize()

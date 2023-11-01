@@ -20,9 +20,9 @@ export default new (class ThreadWorker {
 						const payload = JSON.parse(message.content.toString());
 						// console.log(message);
 
-						const cloudinaryResponse = await cloudinary.destination(
-							payload.image
-						);
+						const cloudinaryResponse = payload.image
+							? await cloudinary.destination(payload.image)
+							: null;
 
 						const thread = this.ThreadRepository.create({
 							content: payload.content,

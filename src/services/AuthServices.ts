@@ -66,7 +66,15 @@ export default new (class AuthServices {
 				where: {
 					email: value.email,
 				},
-				select: ["id", "full_name", "email", "username", "password"],
+				select: [
+					"id",
+					"full_name",
+					"email",
+					"username",
+					"password",
+					"profile_picture",
+					"bio",
+				],
 			});
 
 			if (!isCheckEmail)
@@ -87,6 +95,8 @@ export default new (class AuthServices {
 				full_name: isCheckEmail.full_name,
 				email: isCheckEmail.email,
 				username: isCheckEmail.username,
+				profile_picture: isCheckEmail.profile_picture,
+				bio: isCheckEmail.bio,
 			});
 
 			const token = jwt.sign({ user }, process.env.SECRET_KEY, {
