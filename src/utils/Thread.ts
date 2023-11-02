@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 
 export const createThreadSchema = Joi.object({
-	content: Joi.string(),
+	content: Joi.string().allow("", null),
 	image: Joi.string().allow("", null),
 	users: Joi.number(),
 });

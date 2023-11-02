@@ -14,16 +14,24 @@ export default new (class ThreadQueue {
 			const loginSession: any = res.locals.loginSession;
 
 			const data = {
-				content: req.body.content,
+				content: req.body.content || null || "",
 				image: res.locals.filename || null,
 			};
 
 			// console.log(data.image);
+			// console.log(data.content);
 
 			const { error, value } = createThreadSchema.validate(data);
 			if (error) return res.status(400).json({ error });
 
+			// IF CONTENT AND IMAGE NULL IS WRONG
+			if (!value.content && !value.image)
+				return res
+					.status(400)
+					.json({ Error: "Data Image/Content Dont Be Null" });
+
 			if (!value.image) value.image = null || "";
+			if (!value.content) value.content = null || "";
 			const payload: QueuePayload = {
 				content: value.content,
 				image: value.image,

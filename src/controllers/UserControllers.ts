@@ -6,8 +6,12 @@ export default new (class UserControllers {
 		UserServices.find(req, res);
 	}
 
-	findOne(req: Request, res: Response) {
-		UserServices.findOne(req, res);
+	findOneByParams(req: Request, res: Response) {
+		UserServices.findOneByParams(req, res);
+	}
+
+	findOneByAuth(req: Request, res: Response) {
+		UserServices.findOneByAuth(req, res);
 	}
 
 	create(req: Request, res: Response) {
