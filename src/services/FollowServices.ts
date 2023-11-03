@@ -15,7 +15,8 @@ export default new (class FollowingServices {
 	async follow(req: Request, res: Response): Promise<Response> {
 		try {
 			const userId = Number(req.params.userId);
-			// console.log(userId);
+			const user = res.locals.loginSession;
+
 
 			if (!userId) return res.status(400).json({ Error: `userId not valid` });
 
@@ -31,7 +32,7 @@ export default new (class FollowingServices {
 
 			const followerUser: User | null = await this.UserRepository.findOne({
 				where: {
-					id: res.locals.loginSession.user.id,
+					id: user.user.id,
 				},
 			});
 			if (!followerUser)
@@ -62,8 +63,10 @@ export default new (class FollowingServices {
 			}
 
 			// IF NOT YET FOLLOW
-			followingUser.users = [followerUser];
-			await this.UserRepository.save(followingUser);
+			await this.UserRepository.query(
+				"INSERT INTO following(following_id, follower_id) VALUES($1, $2)",
+				[followingUser.id, followerUser.id]
+			);
 
 			return res.status(200).json({
 				status: "success",

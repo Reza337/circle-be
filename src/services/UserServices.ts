@@ -112,7 +112,6 @@ export default new (class UserServices {
 				},
 			});
 		} catch (error) {
-			console.log(error);
 
 			return res.status(500).json({ Error: error.message });
 		}
@@ -128,7 +127,6 @@ export default new (class UserServices {
 					.status(401)
 					.json({ Error: "Data yang dimasukan tidak Valid" });
 
-			// console.log(data);
 
 			const obj = this.UserRepository.create({
 				username: data.username,

@@ -48,7 +48,6 @@ export default new (class ThreadServices {
 				const replies = threads.replies;
 
 				// Melakukan sesuatu dengan data 'replies', misalnya, mencetaknya
-				// console.log("Replies:", replies);
 
 				// Anda juga dapat melakukan pengolahan data lebih lanjut di sini
 				// Misalnya, Anda bisa mengubah cara responsnya ditampilkan atau menambahkan lebih banyak informasi.
@@ -65,7 +64,6 @@ export default new (class ThreadServices {
 			const data = req.body;
 			const user = res.locals.loginSession;
 
-			// console.log(user);
 
 			const { error } = createThreadSchema.validate(data);
 			if (error)
@@ -73,7 +71,6 @@ export default new (class ThreadServices {
 					.status(401)
 					.json({ Error: "Data yang dimasukan tidak Valid" });
 
-			// console.log(data);
 
 			// connecting to claudinary
 			cloudinary.config({

@@ -60,7 +60,6 @@ export default new (class ReplieServices {
 		try {
 			const data = req.body;
 			const loginSession: any = res.locals.loginSession;
-			// console.log(loginSession);
 
 			const { error } = createReplieSchema.validate(data);
 			if (error)
