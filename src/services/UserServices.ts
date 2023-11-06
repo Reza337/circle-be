@@ -3,6 +3,7 @@ import { AppDataSource } from "../data-source";
 import { Request, Response } from "express";
 import { User } from "../entities/user";
 import { createUserSchema, updateUserSchema } from "../utils/User";
+import { DEFAULT_EXPIRATION, redisClient } from "../libs/radisConfig";
 
 export default new (class UserServices {
 	private readonly UserRepository: Repository<User> =
@@ -81,7 +82,36 @@ export default new (class UserServices {
 
 	async findOneByAuth(req: Request, res: Response): Promise<Response> {
 		try {
+			// USER LOGIN SESSION
 			const loginSession = res.locals.loginSession;
+			if (!loginSession) return res.status(401).json({ Error: "Unauthorized" });
+
+			// REDIS
+			const redisKey = loginSession.user.id.toString();
+			const redisCache = await redisClient.get(redisKey);
+			if (redisCache) {
+				// console.log("success got redis cache");
+
+				const followings = await this.UserRepository.query(
+					"SELECT u.id, u.username, u.full_name, u.profile_picture, u.bio FROM following as f INNER JOIN users as u ON u.id=f.following_id WHERE f.follower_id=$1",
+					[loginSession.user.id]
+				);
+				const followers = await this.UserRepository.query(
+					"SELECT u.id, u.username, u.full_name, u.profile_picture, u.bio FROM following as f INNER JOIN users as u ON u.id=follower_id WHERE f.following_id=$1",
+					[loginSession.user.id]
+				);
+
+				return res.status(200).json({
+					status: "success",
+					message: "Find one user by jwt success",
+					data: JSON.parse(redisCache),
+					follow: {
+						followers,
+						followings,
+					},
+				});
+			}
+
 			const user: User | null = await this.UserRepository.findOne({
 				where: {
 					id: loginSession.user.id,
@@ -101,6 +131,8 @@ export default new (class UserServices {
 				[loginSession.user.id]
 			);
 
+			redisClient.setEx(redisKey, DEFAULT_EXPIRATION, JSON.stringify(user));
+
 			return res.status(200).json({
 				status: "success",
 				message: "Find one user by jwt success",
@@ -112,7 +144,6 @@ export default new (class UserServices {
 				},
 			});
 		} catch (error) {
-
 			return res.status(500).json({ Error: error.message });
 		}
 	}
@@ -126,7 +157,6 @@ export default new (class UserServices {
 				return res
 					.status(401)
 					.json({ Error: "Data yang dimasukan tidak Valid" });
-
 
 			const obj = this.UserRepository.create({
 				username: data.username,
